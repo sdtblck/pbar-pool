@@ -13,13 +13,13 @@ if os.path.isfile(requirements_pth):
     with open(requirements_pth) as f:
         install_requires = [r.strip() for r in f.readlines()]
 
-name = 'pip_project_template'
+name = 'pbar_pool'
 setup(
     name=name,
     packages=find_packages(),
     version='0.0.1',
     license='MIT',
-    description='Template for pip project',
+    description="A straightforward, dependency free way to update multiple progress bars with python's multiprocessing library.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url=f'https://github.com/sdtblck/{name}',
