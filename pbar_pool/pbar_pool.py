@@ -9,6 +9,43 @@ def colored(r, g, b, text):
     return "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m".format(r, g, b, text)
 
 
+def _id():
+    if multiprocessing.current_process()._identity:
+        return multiprocessing.current_process()._identity[0] - 1
+    else:
+        return 0
+
+
+class Pbar:
+
+    def __init__(self, iterable, manager, name: str = "", total: int = None,
+                 color: Tuple[int, int, int] = (0, 255, 125)):
+        if not name:
+            name = str(self.id())
+        if color:
+            assert isinstance(color, tuple)
+            assert len(color) == 3
+        self.iterable = iterable
+        if total is None:
+            if hasattr(self.iterable, '__len__'):
+                total = len(self.iterable)
+        self.data = {"name": name, "total": total, "iters": 0, "start_time": time.time(), "total_time": 0,
+                     "color": color}
+        assert isinstance(manager, PbarPool)
+        self.manager = manager
+        self.manager.pbars[self.id()] = self.data
+
+    def id(self):
+        return _id()
+
+    def __iter__(self):
+        for i, e in enumerate(self.iterable):
+            yield e
+            self.manager.update(i)
+        else:
+            self.manager.close()
+
+
 class PbarPool:
 
     def __init__(self, width=None, color=(0, 255, 125)):
@@ -24,7 +61,7 @@ class PbarPool:
             assert isinstance(color, tuple)
             assert len(color) == 3
         self.pbars[self.id()] = {"name": name, "total": total, "iters": 0, "start_time": time.time(),
-                                           "total_time": 0, "color": color or self.color}
+                                 "total_time": 0, "color": color or self.color}
 
     def close(self):
         del self.pbars[self.id()]
@@ -55,10 +92,7 @@ class PbarPool:
         return string
 
     def id(self):
-        if multiprocessing.current_process()._identity:
-            return multiprocessing.current_process()._identity[0] - 1
-        else:
-            return 0
+        return _id()
 
     def print(self):
         os.system('clear')
@@ -67,7 +101,7 @@ class PbarPool:
             _string = ""
             iters = v['iters']
             total = v['total']
-            total_time =  v["total_time"]
+            total_time = v["total_time"]
             if total is not None:
                 remaining = total - iters
             else:
@@ -91,5 +125,5 @@ class PbarPool:
         print(f"\r{colored(*self.color, string)}", end='')
 
     def initializer(self):
-        global pbar
-        pbar = self
+        global pbars
+        pbars = self

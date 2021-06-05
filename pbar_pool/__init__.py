@@ -1,1 +1,1 @@
-from .pbar_pool import PbarPool
+from .pbar_pool import PbarPool, Pbar

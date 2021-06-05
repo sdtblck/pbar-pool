@@ -17,7 +17,7 @@ name = 'pbar-pool'
 setup(
     name=name,
     packages=find_packages(),
-    version='0.0.1',
+    version='0.0.2',
     license='MIT',
     description="A straightforward, dependency free way to update multiple progress bars with python's multiprocessing library.",
     long_description=long_description,
