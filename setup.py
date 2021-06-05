@@ -13,7 +13,7 @@ if os.path.isfile(requirements_pth):
     with open(requirements_pth) as f:
         install_requires = [r.strip() for r in f.readlines()]
 
-name = 'pbar_pool'
+name = 'pbar-pool'
 setup(
     name=name,
     packages=find_packages(),

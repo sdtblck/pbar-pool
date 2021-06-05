@@ -1,4 +1,4 @@
-# pbar_pool
+# pbar-pool
 
 A straightforward, dependency free way to update multiple progress bars with python's multiprocessing library. 
 
